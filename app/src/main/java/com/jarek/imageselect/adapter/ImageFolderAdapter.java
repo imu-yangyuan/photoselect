@@ -13,6 +13,7 @@ import com.jarek.imageselect.bean.ImageFolderBean;
 import com.jarek.imageselect.core.AnimateFirstDisplayListener;
 import com.jarek.imageselect.core.ImageLoaderHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.util.List;
@@ -46,9 +47,11 @@ import java.util.List;
  */
 public class ImageFolderAdapter extends BaseRecyclerAdapter<ImageFolderBean, RecyclerView.ViewHolder> {
 
+	private  Context context;
 
 	public ImageFolderAdapter(Context context, List<ImageFolderBean> list) {
 		super(context, list);
+		this.context=context;
 		displayListener = new AnimateFirstDisplayListener();
 	}
 
@@ -66,7 +69,9 @@ public class ImageFolderAdapter extends BaseRecyclerAdapter<ImageFolderBean, Rec
 		ImageFolderBean imageFolderBean = list.get(position);
 		holder.fileNameTv.setText(imageFolderBean.fileName);
 		holder.fileNumsTv.setText(String.format(mContext.getResources().getString(R.string.photo_num), imageFolderBean.pisNum));
-		ImageLoader.getInstance().displayImage(ImageDownloader.Scheme.FILE.wrap(imageFolderBean.path), holder.imageIv, ImageLoaderHelper.buildDisplayImageOptionsDefault(R.drawable.defaultpic), displayListener);
+		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+		imageLoader.displayImage(ImageDownloader.Scheme.FILE.wrap(imageFolderBean.path), holder.imageIv, ImageLoaderHelper.buildDisplayImageOptionsDefault(R.drawable.defaultpic), displayListener);
 
 
 		if (mOnClickListener != null) {
